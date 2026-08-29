@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from './api';
 import ProductoCard from './components/ProductoCard';
+import VistaPreviaExcel from './components/VistaPreviaExcel';
 import './App.css';
 
 function App() {
@@ -10,6 +11,8 @@ function App() {
   const [errores, setErrores] = useState([]);
   const [mensaje, setMensaje] = useState('');
   const [busqueda, setBusqueda] = useState('');
+  const [preview, setPreview] = useState(null);
+  const [confirmando, setConfirmando] = useState(false);
 
   // Cargar productos al abrir la página
   useEffect(() => {
@@ -35,30 +38,49 @@ function App() {
     setSubiendo(true);
     setErrores([]);
     setMensaje('');
+    setPreview(null);
 
     const formData = new FormData();
     formData.append('archivo', archivo);
 
     try {
-      const respuesta = await api.post('/productos/importar', formData, {
+      const respuesta = await api.post('/productos/preview', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
-      setMensaje(`Se procesó el archivo. Productos guardados hasta ahora: ${respuesta.data.productos_guardados}`);
-      setErrores(respuesta.data.errores || []);
-
-      // Recargar la lista para ver los nuevos productos
-      await cargarProductos();
+      setPreview(respuesta.data);
     } catch (err) {
       if (err.response?.data?.message) {
         setMensaje(err.response.data.message);
       } else {
-        setMensaje('Ocurrió un error al subir el archivo.');
+        setMensaje('Ocurrió un error al leer el archivo.');
       }
     } finally {
       setSubiendo(false);
-      e.target.value = ''; // permite volver a subir el mismo archivo si se corrige
+      e.target.value = '';
     }
+  };
+
+  const handleConfirmar = async () => {
+    setConfirmando(true);
+    try {
+      const respuesta = await api.post('/productos/confirmar', {
+        archivo_temporal: preview.archivo_temporal,
+      });
+
+      setMensaje(`Se guardaron ${respuesta.data.productos_guardados} producto(s) en total.`);
+      setErrores(respuesta.data.errores || []);
+      setPreview(null);
+
+      await cargarProductos();
+    } catch (err) {
+      setMensaje('Ocurrió un error al guardar los productos.');
+    } finally {
+      setConfirmando(false);
+    }
+  };
+
+  const handleCancelarPreview = () => {
+    setPreview(null);
   };
 
   // Cuando una card se edita con éxito, actualizamos solo ese producto en la lista
@@ -87,6 +109,15 @@ function App() {
             hidden
           />
         </label>
+
+        {preview && (
+          <VistaPreviaExcel
+            datos={preview}
+            onConfirmar={handleConfirmar}
+            onCancelar={handleCancelarPreview}
+            confirmando={confirmando}
+          />
+        )}
 
         {mensaje && <p className="mensaje">{mensaje}</p>}
 

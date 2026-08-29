@@ -187,3 +187,87 @@ h1 {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   }
 }
+
+/* ---------- Vista previa del Excel ---------- */
+
+.preview-container {
+  margin-top: 1.2rem;
+  text-align: left;
+}
+
+.preview-resumen {
+  margin-bottom: 0.8rem;
+}
+
+.texto-verde { color: #16a34a; }
+.texto-rojo { color: #b42318; }
+
+.preview-tabla-scroll {
+  max-height: 320px;
+  overflow: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+}
+
+.preview-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.preview-tabla th {
+  position: sticky;
+  top: 0;
+  background: #f4f5f7;
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.preview-tabla td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #f0f0f0;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fila-invalida {
+  background: #fff8f7;
+}
+
+.celda-errores {
+  color: #b42318;
+  white-space: normal;
+}
+
+.preview-botones {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.boton-confirmar {
+  flex: 1;
+  padding: 0.7rem;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.boton-confirmar:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.boton-cancelar {
+  padding: 0.7rem 1.2rem;
+  background: #e5e7eb;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
