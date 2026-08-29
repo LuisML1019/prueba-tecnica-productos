@@ -140,3 +140,50 @@ h1 {
   color: #b42318;
   font-size: 0.85rem;
 }
+
+.zona-busqueda {
+  margin-bottom: 1.2rem;
+}
+
+.zona-busqueda input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+/* ---------- Diseño responsivo ---------- */
+
+@media (max-width: 640px) {
+  .contenedor {
+    padding: 1rem 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  .zona-carga {
+    padding: 1rem;
+  }
+
+  .boton-subir {
+    width: 100%;
+    text-align: center;
+  }
+
+  .grid-productos {
+    grid-template-columns: 1fr;
+  }
+
+  .card-botones {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .grid-productos {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}

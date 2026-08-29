@@ -9,6 +9,7 @@ function App() {
   const [subiendo, setSubiendo] = useState(false);
   const [errores, setErrores] = useState([]);
   const [mensaje, setMensaje] = useState('');
+  const [busqueda, setBusqueda] = useState('');
 
   // Cargar productos al abrir la página
   useEffect(() => {
@@ -67,6 +68,10 @@ function App() {
     );
   };
 
+  const productosFiltrados = productos.filter((p) =>
+    p.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
   return (
     <div className="contenedor">
       <h1>Gestión de Productos</h1>
@@ -99,13 +104,26 @@ function App() {
         )}
       </div>
 
+      {!cargando && productos.length > 0 && (
+        <div className="zona-busqueda">
+          <input
+            type="text"
+            placeholder="Buscar producto por nombre..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+        </div>
+      )}
+
       {cargando ? (
         <p>Cargando productos...</p>
       ) : productos.length === 0 ? (
         <p>No hay productos cargados todavía. Sube un archivo Excel para empezar.</p>
+      ) : productosFiltrados.length === 0 ? (
+        <p>No se encontraron productos que coincidan con "{busqueda}".</p>
       ) : (
         <div className="grid-productos">
-          {productos.map((producto) => (
+          {productosFiltrados.map((producto) => (
             <ProductoCard
               key={producto.id}
               producto={producto}
